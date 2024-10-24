@@ -2,11 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>Items Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to {{ title }}!</h1>
+    <h1>Items List</h1>
+    <a href="/create">
+        <button type="button">Go to insert Page</button>
+    </a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>url</th>
+                <th>name</th>
+                <th>website</th>
+                <th>people_count</th>
+                <th>senior_people_count</th>
+                <th>emails_count</th>
+                <th>personal_emails_count</th>
+                <th>phones_count</th>
+                <th>addresses_count</th>
+                <th>investors_count</th>
+                <th>clients_count</th>
+                <th>partners_count</th>
+                <th>changes_count</th>
+                <th>people_changes_count</th>
+                <th>contact_changes_count</th>
+                <th>description_short</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aihitdataUK in items %}
+            <tr>
+                <td>{{ aihitdataUK.id }}</td>
+                <td>{{ aihitdataUK.url }}</td>
+                <td>{{ aihitdataUK.name }}</td>
+                <td>{{ aihitdataUK.website }}</td>
+                <td>{{ aihitdataUK.people_count }}</td>
+                <td>{{ aihitdataUK.senior_people_count }}</td>
+                <td>{{ aihitdataUK.emails_count }}</td>
+                <td>{{ aihitdataUK.personal_emails_count }}</td>
+                <td>{{ aihitdataUK.phones_count }}</td>
+                <td>{{ aihitdataUK.addresses_count }}</td>
+                <td>{{ aihitdataUK.investors_count }}</td>
+                <td>{{ aihitdataUK.clients_count }}</td>
+                <td>{{ aihitdataUK.partners_count }}</td>
+                <td>{{ aihitdataUK.changes_count }}</td>
+                <td>{{ aihitdataUK.people_changes_count }}</td>
+                <td>{{ aihitdataUK.contact_changes_count }}</td>
+                <td>{{ aihitdataUK.description_short }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
