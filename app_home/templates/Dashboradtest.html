@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboradtest</title>
+</head>
+<body>
+    <h1>Company Info</h1>
+    {% if CompanyInfo %}
+        <h2>Details:</h2>
+        <p>ID: {{ CompanyInfo.id }}</p>
+        <p>URL: {{ CompanyInfo.url }}</p>
+        <p>Name: {{ CompanyInfo.name }}</p>
+        <p>Website: {{ CompanyInfo.website }}</p>
+        <p>Description: {{ CompanyInfo.description_short }}</p>
+    {% else %}
+        <p>No data found for this company.</p>
+    {% endif %}
+    
+    </form>
+</body>
+</html>

@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import models 
-from models import User
+from models import aihitdataUK, User, company_info, company_employee, company_contact, company_benefits, company_change, SessionLocal
 
 
 app = FastAPI()
@@ -38,6 +38,12 @@ def get_db():
 class ItemCreate(BaseModel):
     name: str
     description: str
+
+#ไปหน้า dashboradtset
+@app.get("/Dashboradtest/{company_info_id}", response_class=HTMLResponse)
+async def read_company(company_info_id: int, request: Request, db: Session = Depends(get_db)):
+    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_info_id).first()
+    return templates.TemplateResponse("Dashboradtest.html", {"request": request, "CompanyInfo": CompanyInfo})
 
 
 
@@ -81,7 +87,7 @@ async def read_index(request: Request):
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, db: Session = Depends(get_db)):
-    item = db.query(models.aihitdataUK).filter(models.aihitdataUK.id == item_id).first()
+    item = db.query(models.company_info).filter(models.company_info.id == item_id).first()
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return item
@@ -123,3 +129,6 @@ async def create_company(
     db.add(new_company)
     db.commit()
     return RedirectResponse(url="/create", status_code=303)
+
+#function-----------------------------------------------------------------------------------ตารางฐานข้อมูล
+
