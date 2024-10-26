@@ -190,7 +190,7 @@ async def create_company(
     new_CompanyBenefits = models.company_benefits (id=id, investors_count=investors_count, clients_count=clients_count, partners_count=partners_count)
     new_CompanyChange = models.company_change(id=id, changes_count=changes_count, people_changes_count=people_changes_count, contact_changes_count=contact_changes_count)
 
-    db.add(new_company, new_CompanyInfo, new_CompanyEmployee, new_CompanyContactm, new_CompanyBenefits, new_CompanyChange)
+    db.add_all([new_company, new_CompanyInfo, new_CompanyEmployee, new_CompanyContactm, new_CompanyBenefits, new_CompanyChange])
     db.commit()
     return RedirectResponse(url="/create", status_code=303)
 
