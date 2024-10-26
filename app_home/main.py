@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from pydantic import BaseModel
 import models 
 from models import aihitdataUK, User, company_info, company_employee, company_contact, company_benefits, company_change, SessionLocal
@@ -40,11 +41,68 @@ class ItemCreate(BaseModel):
     description: str
 
 #ไปหน้า dashboradtset
-@app.get("/Dashboradtest/{company_info_id}", response_class=HTMLResponse)
-async def read_company(company_info_id: int, request: Request, db: Session = Depends(get_db)):
-    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_info_id).first()
-    return templates.TemplateResponse("Dashboradtest.html", {"request": request, "CompanyInfo": CompanyInfo})
+@app.get("/Dashboradtest/{company_id}", response_class=HTMLResponse)
+async def read_company(company_id: int, request: Request, db: Session = Depends(get_db)):
+    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_id).first()
+    CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
+    CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
+    CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
+    CompanyChange = db.query(models.company_change).filter(models.company_change.id == company_id).first()
+    return templates.TemplateResponse("Dashboradtest.html", {"request": request, 
+                                                            "CompanyInfo": CompanyInfo, 
+                                                            "CompanyEmployee": CompanyEmployee, 
+                                                            "CompanyContact": CompanyContact, 
+                                                            "CompanyBenefits": CompanyBenefits, 
+                                                            "CompanyChange": CompanyChange})
 
+#ไปหน้า dashborDashTotalComTestadtset
+@app.get("/DashTotalComTest", response_class=HTMLResponse)
+async def get_totals(request: Request, db: Session = Depends(get_db)):
+    # คำนวณผลรวมของคอลัมน์ 
+    total_people_count = db.query(func.sum(models.aihitdataUK.people_count)).scalar()
+    total_senior_people_count = db.query(func.sum(models.aihitdataUK.senior_people_count)).scalar()
+    total_emails_count = db.query(func.sum(models.aihitdataUK.emails_count)).scalar()
+    total_personal_emails_count = db.query(func.sum(models.aihitdataUK.personal_emails_count)).scalar()
+    total_phones_count = db.query(func.sum(models.aihitdataUK.phones_count)).scalar()
+    total_addresses_count = db.query(func.sum(models.aihitdataUK.addresses_count)).scalar()
+    total_investors_count = db.query(func.sum(models.aihitdataUK.investors_count)).scalar()
+    total_clients_count = db.query(func.sum(models.aihitdataUK.clients_count)).scalar()
+    total_partners_count = db.query(func.sum(models.aihitdataUK.partners_count)).scalar()
+    total_changes_count = db.query(func.sum(models.aihitdataUK.changes_count)).scalar()
+    total_people_changes_count = db.query(func.sum(models.aihitdataUK.people_changes_count)).scalar()
+    total_contact_changes_count = db.query(func.sum(models.aihitdataUK.contact_changes_count)).scalar()
+    # ส่งผลรวมไปยัง template HTML
+    return templates.TemplateResponse("DashTotalComTest.html", {
+        "request": request,
+        "total_people_count": total_people_count,
+        "total_senior_people_count": total_senior_people_count,
+        "total_emails_count": total_emails_count,
+        "total_personal_emails_count": total_personal_emails_count,
+        "total_phones_count": total_phones_count,
+        "total_addresses_count": total_addresses_count,
+        "total_investors_count": total_investors_count,
+        "total_clients_count": total_clients_count,
+        "total_partners_count": total_partners_count,
+        "total_changes_count": total_changes_count,
+        "total_people_changes_count": total_people_changes_count,
+        "total_contact_changes_count": total_contact_changes_count
+
+    })
+
+@app.post("/DashTotalComTest", response_class=HTMLResponse)
+async def search_company(request: Request, company_id: int = Form(...), db: Session = Depends(get_db)):
+    # ค้นหาในตารางโดยใช้ company_id
+    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_id).first()
+    CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
+    CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
+    CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
+    CompanyChange = db.query(models.company_change).filter(models.company_change.id == company_id).first()
+    return templates.TemplateResponse("Dashboradtest.html", {"request": request, 
+                                                            "CompanyInfo": CompanyInfo, 
+                                                            "CompanyEmployee": CompanyEmployee, 
+                                                            "CompanyContact": CompanyContact, 
+                                                            "CompanyBenefits": CompanyBenefits, 
+                                                            "CompanyChange": CompanyChange})
 
 
 # Route แสดงฟอร์ม Login
@@ -126,7 +184,13 @@ async def create_company(
     new_company = models.aihitdataUK(id=id, url=url, name=name, website=website, people_count=people_count, senior_people_count=senior_people_count, emails_count=emails_count, personal_emails_count=personal_emails_count,
                                      phones_count=phones_count, addresses_count=addresses_count, investors_count=investors_count, clients_count=clients_count, partners_count=partners_count, changes_count=changes_count,
                                      people_changes_count=people_changes_count, contact_changes_count=contact_changes_count, description_short=description_short)
-    db.add(new_company)
+    new_CompanyInfo = models.company_info(id=id, url=url, name=name, website=website, description_short=description_short)
+    new_CompanyEmployee = models.company_employee(id=id, people_count=people_count, senior_people_count=senior_people_count)
+    new_CompanyContactm = models.company_contact(id=id,emails_count=emails_count, personal_emails_count=personal_emails_count, phones_count=phones_count, addresses_count=addresses_count)
+    new_CompanyBenefits = models.company_benefits (id=id, investors_count=investors_count, clients_count=clients_count, partners_count=partners_count)
+    new_CompanyChange = models.company_change(id=id, changes_count=changes_count, people_changes_count=people_changes_count, contact_changes_count=contact_changes_count)
+
+    db.add(new_company, new_CompanyInfo, new_CompanyEmployee, new_CompanyContactm, new_CompanyBenefits, new_CompanyChange)
     db.commit()
     return RedirectResponse(url="/create", status_code=303)
 
