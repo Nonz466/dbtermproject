@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from pydantic import BaseModel
 import models 
 from models import aihitdataUK, User, company_info, company_employee, company_contact, company_benefits, company_change, SessionLocal
@@ -15,6 +15,7 @@ app = FastAPI()
 
 #@app.get("/")
 #def read_root():
+    #copy_data_to_company_info()
     #return {"Hello": "World"}
 
 
@@ -43,7 +44,7 @@ class ItemCreate(BaseModel):
 #ไปหน้า dashboradtset
 @app.get("/Dashboradtest/{company_id}", response_class=HTMLResponse)
 async def read_company(company_id: int, request: Request, db: Session = Depends(get_db)):
-    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_id).first()
+    CompanyInfo = db.query(models.company_info).filter(models.company_info.company_idUK == company_id).first()
     CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
     CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
     CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
@@ -58,7 +59,7 @@ async def read_company(company_id: int, request: Request, db: Session = Depends(
 #ไปหน้า dashborDashTotalComTestadtset
 @app.get("/DashTotalComTest", response_class=HTMLResponse)
 async def get_totals(request: Request, db: Session = Depends(get_db)):
-    # คำนวณผลรวมของคอลัมน์ 
+    # คำนวณผลรวมของคอลัมน์ โดยใช้คำสั่ง GROUP BY โดยใช้ฟังก์ชัน sum()
     total_people_count = db.query(func.sum(models.aihitdataUK.people_count)).scalar()
     total_senior_people_count = db.query(func.sum(models.aihitdataUK.senior_people_count)).scalar()
     total_emails_count = db.query(func.sum(models.aihitdataUK.emails_count)).scalar()
@@ -91,8 +92,8 @@ async def get_totals(request: Request, db: Session = Depends(get_db)):
 
 @app.post("/DashTotalComTest", response_class=HTMLResponse)
 async def search_company(request: Request, company_id: int = Form(...), db: Session = Depends(get_db)):
-    # ค้นหาในตารางโดยใช้ company_id
-    CompanyInfo = db.query(models.company_info).filter(models.company_info.id == company_id).first()
+    # ค้นหาในตารางโดยใช้ company_id และมีการ join ระหว่าง ตาราง company_info และ ตาราง aihitdataUK ใน Database โดยการใช้ Foreign Key
+    CompanyInfo = db.query(models.company_info).filter(models.company_info.company_idUK == company_id).first()
     CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
     CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
     CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
@@ -155,6 +156,17 @@ async def read_items(request: Request, db: Session = Depends(get_db)):
     items = db.query(models.aihitdataUK).all()  # ดึงข้อมูลทั้งหมดจากตาราง
     return templates.TemplateResponse("test.html", {"request": request, "items": items})
 
+# top 10 company ที่มีนักลงทุน
+@app.get("/top10", response_class=HTMLResponse)
+async def get_top10_investors(request: Request, db: Session = Depends(get_db)):
+    top_10investors = (
+        db.query(models.aihitdataUK)
+        .order_by(desc(models.aihitdataUK.investors_count))  # เรียงลำดับจากมากไปน้อย
+        .limit(10)  # จำกัดผลลัพธ์ที่ 10 รายการ
+        .all()
+    )
+    return templates.TemplateResponse("top10.html", {"request": request, "top_10investors": top_10investors})
+
 @app.get("/create", response_class=HTMLResponse)
 async def create_company_form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
@@ -184,7 +196,7 @@ async def create_company(
     new_company = models.aihitdataUK(id=id, url=url, name=name, website=website, people_count=people_count, senior_people_count=senior_people_count, emails_count=emails_count, personal_emails_count=personal_emails_count,
                                      phones_count=phones_count, addresses_count=addresses_count, investors_count=investors_count, clients_count=clients_count, partners_count=partners_count, changes_count=changes_count,
                                      people_changes_count=people_changes_count, contact_changes_count=contact_changes_count, description_short=description_short)
-    new_CompanyInfo = models.company_info(id=id, url=url, name=name, website=website, description_short=description_short)
+    new_CompanyInfo = models.company_info(company_idUK=id, url=url, name=name, website=website, description_short=description_short)
     new_CompanyEmployee = models.company_employee(id=id, people_count=people_count, senior_people_count=senior_people_count)
     new_CompanyContactm = models.company_contact(id=id,emails_count=emails_count, personal_emails_count=personal_emails_count, phones_count=phones_count, addresses_count=addresses_count)
     new_CompanyBenefits = models.company_benefits (id=id, investors_count=investors_count, clients_count=clients_count, partners_count=partners_count)
@@ -193,6 +205,21 @@ async def create_company(
     db.add_all([new_company, new_CompanyInfo, new_CompanyEmployee, new_CompanyContactm, new_CompanyBenefits, new_CompanyChange])
     db.commit()
     return RedirectResponse(url="/create", status_code=303)
+
+@app.get("/register", response_class=HTMLResponse)
+async def register_form(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+@app.post("/register")
+async def register_company(
+    username: str = Form(...),
+    hashed_password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    new_Account = models.User(username=username, hashed_password=hashed_password )
+    db.add(new_Account)
+    db.commit()
+    return RedirectResponse(url="/register", status_code=303)
 
 #function-----------------------------------------------------------------------------------ตารางฐานข้อมูล
 

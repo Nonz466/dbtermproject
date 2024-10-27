@@ -7,16 +7,19 @@ def copy_data_to_company_info():
     aihitdataUK1 = db.query(aihitdataUK.id, aihitdataUK.url, aihitdataUK.name, aihitdataUK.website, aihitdataUK.description_short).all()
     
     # เพิ่มข้อมูลที่คัดลอกไปยังตาราง company_info
+    current_id = 1
     try:
         for company in aihitdataUK1:
             new_company_info = company_info(
-                id=company.id,
+                id = current_id,
+                company_id=company.id,
                 url=company.url,
                 name=company.name,
                 website=company.website,
                 description_short=company.description_short
             )
             db.add(new_company_info)
+            current_id += 1
     
     # บันทึกข้อมูลลงในตาราง company_info
         db.commit()

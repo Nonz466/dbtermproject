@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String, create_engine, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
 # สร้างฐานข้อมูลและเชื่อมต่อกับ SQLite
@@ -37,6 +38,7 @@ class aihitdataUK(Base):
     contact_changes_count = Column(Integer, index=True)
     description_short = Column(String, index=True)
 
+    company_info = relationship("company_info", back_populates="aihitdataUK")
 class company_info(Base):
     __tablename__ = "company_info"
 
@@ -45,6 +47,9 @@ class company_info(Base):
     name = Column(String, index=True)
     website = Column(String, index=True)
     description_short = Column(String, index=True)
+    company_idUK = Column(Integer, ForeignKey("aihitdataUK.id"))
+
+    aihitdataUK = relationship("aihitdataUK", back_populates="company_info")
 
 class company_employee(Base):
     __tablename__ = "company_employee"
@@ -61,7 +66,7 @@ class company_contact(Base):
     personal_emails_count = Column(Integer, index=True)
     phones_count = Column(Integer, index=True)
     addresses_count = Column(Integer, index=True)
-
+ 
 class company_benefits(Base):
     __tablename__ = "company_benefits"
 
@@ -69,7 +74,7 @@ class company_benefits(Base):
     investors_count = Column(Integer, index=True)
     clients_count = Column(Integer, index=True)
     partners_count = Column(Integer, index=True)
-
+ 
 class company_change(Base):
     __tablename__ = "company_change"
 
