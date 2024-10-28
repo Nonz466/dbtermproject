@@ -6,6 +6,7 @@
     <title>Company Totals</title>
 </head>
 <body>
+ 
     <h1>Company Totals</h1>
     
     <p><strong>Total People Count:</strong> {{ total_people_count }}</p>
@@ -23,13 +24,19 @@
 
     <h1>Search for Company Info by ID</h1>
     
-    <!-- ฟอร์มสำหรับรับค่า input จากผู้ใช้ -->
+  
     <form action="/DashTotalComTest" method="post">
         <label for="company_id">Enter Company ID:</label>
         <input type="number" id="company_id" name="company_id" required>
         <button type="submit">Search</button>
     </form>
 
-    <a href="/test">Back to Home</a>  <!-- ลิงก์กลับไปหน้าแรก -->
+    <a href="/test">Back to Home</a> 
+
+
 </body>
 </html>
+
+
+
+<!-- new template Start -->
