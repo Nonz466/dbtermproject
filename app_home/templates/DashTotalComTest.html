@@ -51,6 +51,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total chart all company</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -74,7 +75,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="index.html"><img
+                            <a href="/DashTotalComTest"><img
                                     src="https://themewagon.github.io/mazer/dist/assets/images/logo/logo.png" alt="Logo"
                                     srcset=""></a>
                         </div>
@@ -263,7 +264,7 @@
                         </li>
 
 
-                        <li class="sidebar-item  has-sub">
+                        <!-- <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-egg-fill"></i>
                                 <span>Icons</span>
@@ -279,7 +280,7 @@
                                     <a href="ui-icons-dripicons.html">Dripicons</a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> -->
 
 
 
@@ -655,7 +656,7 @@
                                                         dataLabels: {
                                                             name: {
                                                                 show: true,
-                                                                fontSize: '16px', // ขนาดของชื่อ
+                                                                fontSize: '30px', // ขนาดของชื่อ
                                                                 color: undefined, // สีของชื่อ
                                                                 offsetY: -10 // ระยะห่างจากกลางกราฟ
                                                             },
@@ -705,18 +706,18 @@
                                     </div>
                                     <div class="card-body">
                                         <div id="radarChart"></div>
-                                        <script type="text/javascript">
+                                        <script>
                                             // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
                                             const totalInvestorsCount = {{ total_investors_count }};
                                             const totalClientsCount = {{ total_clients_count }};
                                             const totalPartnersCount = {{ total_partners_count }};
 
                                             // คำนวณเปอร์เซ็นต์
-                                            const total = totalInvestorsCount + totalClientsCount + totalPartnersCount;
+                                            const totalu = totalInvestorsCount + totalClientsCount + totalPartnersCount;
 
-                                            const percentageInvestors = (totalInvestorsCount / total) * 100;
-                                            const percentageClients = (totalClientsCount / total) * 100;
-                                            const percentagePartners = (totalPartnersCount / total) * 100;
+                                            const percentageInvestors = (totalInvestorsCount / totalu) * 100;
+                                            const percentageClients = (totalClientsCount / totalu) * 100;
+                                            const percentagePartners = (totalPartnersCount / totalu) * 100;
 
                                             var radarOptions = {
                                                 series: [{
@@ -780,11 +781,11 @@
                                             const totalContactChangesCount = {{ total_contact_changes_count }};
 
                                             // คำนวณเปอร์เซ็นต์
-                                            const total = totalChangesCount + totalPeopleChangesCount + totalContactChangesCount;
+                                            const totaly = totalChangesCount + totalPeopleChangesCount + totalContactChangesCount;
 
-                                            const percentageChanges = (totalChangesCount / total) * 100;
-                                            const percentagePeopleChanges = (totalPeopleChangesCount / total) * 100;
-                                            const percentageContactChanges = (totalContactChangesCount / total) * 100;
+                                            const percentageChanges = (totalChangesCount / totaly) * 100;
+                                            const percentagePeopleChanges = (totalPeopleChangesCount / totaly) * 100;
+                                            const percentageContactChanges = (totalContactChangesCount / totaly) * 100;
 
                                             var polarOptions = {
                                                 series: [percentageChanges, percentagePeopleChanges, percentageContactChanges],
