@@ -90,14 +90,18 @@ async def get_totals(request: Request, db: Session = Depends(get_db)):
 
     })
 
+def to_dict(obj):
+    """แปลง SQLAlchemy object เป็น dictionary"""
+    return {c.name: getattr(obj, c.name) for c in obj.__table__.columns} if obj else {}
+
 @app.post("/DashTotalComTest", response_class=HTMLResponse)
 async def search_company(request: Request, company_id: int = Form(...), db: Session = Depends(get_db)):
     # ค้นหาในตารางโดยใช้ company_id และมีการ join ระหว่าง ตาราง company_info และ ตาราง aihitdataUK ใน Database โดยการใช้ Foreign Key
     CompanyInfo = db.query(models.company_info).filter(models.company_info.company_idUK == company_id).first()
-    CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
-    CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
-    CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
-    CompanyChange = db.query(models.company_change).filter(models.company_change.id == company_id).first()
+    CompanyEmployee = to_dict(db.query(models.company_employee).filter(models.company_employee.id == company_id).first())
+    CompanyContact = to_dict(db.query(models.company_contact).filter(models.company_contact.id == company_id).first())
+    CompanyBenefits = to_dict(db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first())
+    CompanyChange = to_dict(db.query(models.company_change).filter(models.company_change.id == company_id).first())
     return templates.TemplateResponse("Dashboradtest.html", {"request": request, 
                                                             "CompanyInfo": CompanyInfo, 
                                                             "CompanyEmployee": CompanyEmployee, 
