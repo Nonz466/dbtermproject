@@ -38,7 +38,7 @@ class aihitdataUK(Base):
     contact_changes_count = Column(Integer, index=True)
     description_short = Column(String, index=True)
 
-    company_info = relationship("company_info", back_populates="aihitdataUK")
+    company_info = relationship("company_info", back_populates="aihitdataUK", cascade="all, delete-orphan")
 class company_info(Base):
     __tablename__ = "company_info"
 
@@ -47,7 +47,7 @@ class company_info(Base):
     name = Column(String, index=True)
     website = Column(String, index=True)
     description_short = Column(String, index=True)
-    company_idUK = Column(Integer, ForeignKey("aihitdataUK.id"))
+    company_idUK = Column(Integer, ForeignKey("aihitdataUK.id", ondelete="CASCADE"))
 
     aihitdataUK = relationship("aihitdataUK", back_populates="company_info")
 

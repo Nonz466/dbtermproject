@@ -13,15 +13,6 @@ from models import aihitdataUK, User, company_info, company_employee, company_co
 app = FastAPI()
 
 
-#@app.get("/")
-#def read_root():
-    #copy_data_to_company_info()
-    #return {"Hello": "World"}
-
-
-#@app.get("/items/{item_id}")
-#def read_item(item_id: int, q: Union[str, None] = None):
-    #return {"item_id": item_id, "q": q}
 # สร้าง FastAPI instance
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -36,25 +27,6 @@ def get_db():
     finally:
         db.close()
 
-# Pydantic model สำหรับรับข้อมูลจากผู้ใช้
-class ItemCreate(BaseModel):
-    name: str
-    description: str
-
-#ไปหน้า dashboradtset
-@app.get("/Dashboradtest/{company_id}", response_class=HTMLResponse)
-async def read_company(company_id: int, request: Request, db: Session = Depends(get_db)):
-    CompanyInfo = db.query(models.company_info).filter(models.company_info.company_idUK == company_id).first()
-    CompanyEmployee = db.query(models.company_employee).filter(models.company_employee.id == company_id).first()
-    CompanyContact = db.query(models.company_contact).filter(models.company_contact.id == company_id).first()
-    CompanyBenefits = db.query(models.company_benefits).filter(models.company_benefits.id == company_id).first()
-    CompanyChange = db.query(models.company_change).filter(models.company_change.id == company_id).first()
-    return templates.TemplateResponse("Dashboradtest.html", {"request": request, 
-                                                            "CompanyInfo": CompanyInfo, 
-                                                            "CompanyEmployee": CompanyEmployee, 
-                                                            "CompanyContact": CompanyContact, 
-                                                            "CompanyBenefits": CompanyBenefits, 
-                                                            "CompanyChange": CompanyChange})
 
 #ไปหน้า dashborDashTotalComTestadtset
 @app.get("/DashTotalComTest", response_class=HTMLResponse)
@@ -111,6 +83,8 @@ async def search_company(request: Request, company_id: int = Form(...), db: Sess
 
 
 # Route แสดงฟอร์ม Login
+
+@app.get("/", response_class=HTMLResponse)
 @app.get("/logintest", response_class=HTMLResponse)
 async def login_form(request: Request):
     return templates.TemplateResponse("logintest.html", {"request": request})
@@ -129,31 +103,10 @@ async def login(
         return templates.TemplateResponse("logintest.html", {"request": request, "error": "Invalid credentials"})
     
     # ถ้า login ผ่าน ให้ redirect ไปยังหน้า index
-    return RedirectResponse(url="/table", status_code=303)
+    return RedirectResponse(url="/DashTotalComTest", status_code=303)
 
-# สร้าง route ที่ render หน้า HTML
-@app.get("/login/", response_class=HTMLResponse)
-async def read_index(request: Request):
-     context = {
-         'request': request,
-         #'value': '/static/document/test2.pdf',
-     }
-     return templates.TemplateResponse("index.html", context)
 
-@app.get("/test/", response_class=HTMLResponse)
-async def read_index(request: Request):
-     context = {
-         'request': request,
-         #'value': '/static/document/test2.pdf',
-     }
-     return templates.TemplateResponse("index.html", context)
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, db: Session = Depends(get_db)):
-    item = db.query(models.company_info).filter(models.company_info.id == item_id).first()
-    if item is None:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return item
 
 @app.get("/table", response_class=HTMLResponse)
 async def read_items(request: Request, db: Session = Depends(get_db)):
