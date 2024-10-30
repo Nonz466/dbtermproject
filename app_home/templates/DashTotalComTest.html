@@ -542,315 +542,355 @@
                     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
                 </head>
 
+
+
                 <body>
                     <section class="section">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Bar Chart</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="barChart"></div>
-                                        <script>
-                                            // ข้อมูลพนักงานในบริษัท
-                                            const totalPeopleCount = {{ total_people_count }};
-                                            const totalSeniorPeopleCount = {{ total_senior_people_count }};
+                        <div class="container">
+                            <!-- Row 1 -->
+                            <div class="row mb-1">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Total Employee chart</h4>
+                                            <!-- กล่องเปล่าด้วย div -->
+                                            <div style="width: 200px; height: 98px; border: 0px transparent #ffffff; background-color: transparent;"></div>
 
-                                            // คอนฟิก ApexChart
-                                            var barOptions = {
-                                                series: [{
-                                                    name: 'Amount',
-                                                    data: [totalPeopleCount, totalSeniorPeopleCount]
-                                                }],
-                                                chart: {
-                                                    height: 350,
-                                                    type: 'bar',
-                                                },
-                                                colors: ['#FF0000', '#FFA500'], // ตัวอย่างสีของบาร์
-                                                plotOptions: {
-                                                    bar: {
-                                                        columnWidth: '45%',
-                                                        distributed: true,
-                                                        borderRadius: 5
-                                                    }
-                                                },
-                                                dataLabels: {
-                                                    enabled: false
-                                                },
-                                                legend: {
-                                                    show: false
-                                                },
-                                                xaxis: {
-                                                    categories: ["Total People Count", "Total Senior People Count"],
-                                                    labels: {
-                                                        style: {
-                                                            colors: ['#FF0000', '#FFA500'],
-                                                            fontSize: '12px'
-                                                        }
-                                                    }
-                                                },
-                                                yaxis: {
-                                                    min: 0,
-                                                    max: totalPeopleCount + 20, // ปรับค่าสูงสุดตามข้อมูล
-                                                    title: {
-                                                        text: 'Number of Employees'
-                                                    }
-                                                },
-                                                title: {
-                                                    text: 'Total Company Employee',
-                                                    align: 'center'
-                                                }
-                                            };
-
-                                            var barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
-                                            barChart.render();
-                                        </script>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Custom Angle Circle Chart</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="radialBar"></div>
-                                        <text x="187" y="98.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Emails: {{ total_emails_count }} |</text>
-                                        <text x="187" y="90.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Personal Emails: {{ total_personal_emails_count }} |</text>
-                                        <text x="187" y="80.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Phones: {{ total_phones_count }} |</text>
-                                        <text x="187" y="70.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Addresses: {{ total_addresses_count }} |</text>
-                                        
-                                        <script type="text/javascript">
                                             
-                                            // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
-                                            const totalEmailsCount = {{ total_emails_count }};
-                                            const totalPersonalEmailsCount = {{ total_personal_emails_count }};
-                                            const totalPhonesCount = {{ total_phones_count }};
-                                            const totalAddressesCount = {{ total_addresses_count }};
-
-                                            var chartColors = {
-                                                blue: '#6d6875',
-                                                fuchsia: '#b5838d',
-                                                green: '#e5989b',
-                                                peacock: '#ffcdb2'
-                                            };
-
-                                            // คำนวณเปอร์เซ็นต์สำหรับแต่ละประเภท
-                                            const total = totalEmailsCount + totalPersonalEmailsCount + totalPhonesCount + totalAddressesCount;
-
-                                            const percentageEmails = (totalEmailsCount / total) * 100;
-                                            const percentagePersonalEmails = (totalPersonalEmailsCount / total) * 100;
-                                            const percentagePhones = (totalPhonesCount / total) * 100;
-                                            const percentageAddresses = (totalAddressesCount / total) * 100;
-
-                                            var circleOptions = {
-                                                series: [percentageEmails, percentagePersonalEmails, percentagePhones, percentageAddresses], // ใส่ค่าที่เป็นเปอร์เซ็นต์
-                                                chart: {
-                                                    height: 390,
-                                                    type: 'radialBar'
-                                                },
-                                                plotOptions: {
-                                                    radialBar: {
-                                                        offsetY: 0,
-                                                        startAngle: 0,
-                                                        endAngle: 270,
-                                                        hollow: {
-                                                            margin: 5,
-                                                            size: '30%',
-                                                            background: 'transparent',
-                                                            image: undefined
-                                                        },
-                                                        dataLabels: {
-                                                            name: {
-                                                                show: true,
-                                                                fontSize: '16px', // ขนาดของชื่อ
-                                                                color: '#39539e', // สีของชื่อ
-                                                                offsetY: -10 // ระยะห่างจากกลางกราฟ
-                                                            },
-                                                            value: {
-                                                                show: true,
-                                                                formatter: function (val) {
-                                                                    // return val; 
-                                                                }
-                                                            },
-                                                            barLabels: {
-                                                                enabled: true,
-                                                                useSeriesColors: true,
-                                                                offsetX: -8,
-                                                                fontSize: '16px',
-                                                                formatter: function (seriesName, opts) {
-                                                                    return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
-                                                                },
-                                                            },
-                                                        }
-                                                    }
-                                                },
-                                                colors: [chartColors.blue, chartColors.fuchsia, chartColors.green, chartColors.peacock],
-                                                labels: ['Emails', 'Personal Emails', 'Phones', 'Addresses'],
-                                                responsive: [{
-                                                    breakpoint: 480,
-                                                    options: {
-                                                        legend: {
-                                                            show: false
-                                                        }
-                                                    }
-                                                }]
-                                            };
-
-                                            var circleChart = new ApexCharts(document.querySelector("#radialBar"), circleOptions);
-                                            circleChart.render();
-                                        </script>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Horizontal bar Chart</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="chart"></div>
-                                        <script>
-                                            // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
-                                            const totalInvestorsCount = {{ total_investors_count }};
-                                            const totalClientsCount = {{ total_clients_count }};
-                                            const totalPartnersCount = {{ total_partners_count }};
-
-                                            // ตั้งค่ากราฟแท่งโดยใช้ค่าจำนวนเต็ม
-                                            var options = {
-                                                series: [{
-                                                    data: [totalInvestorsCount, totalClientsCount, totalPartnersCount]
-                                                }],
-                                                chart: {
-                                                    type: 'bar',
-                                                    height: 380
-                                                },
-                                                plotOptions: {
-                                                    bar: {
-                                                        barHeight: '100%',
-                                                        distributed: true,
-                                                        horizontal: true,
-                                                        dataLabels: {
-                                                            position: 'bottom'
-                                                        },
-                                                    }
-                                                },
-                                                colors: ['#33b2df', '#546E7A', '#d4526e'],
-                                                dataLabels: {
-                                                    enabled: true,
-                                                    textAnchor: 'start',
-                                                    style: {
-                                                        colors: ['#fff']
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="barChart1"></div>
+                                            <script>// ข้อมูลพนักงานในบริษัท
+                                                const totalPeopleCount = {{ total_people_count }};
+                                                const totalSeniorPeopleCount = {{ total_senior_people_count }};
+    
+                                                // คอนฟิก ApexChart
+                                                var barOptions = {
+                                                    series: [{
+                                                        name: 'Amount',
+                                                        data: [totalPeopleCount, totalSeniorPeopleCount]
+                                                    }],
+                                                    chart: {
+                                                        height: 350,
+                                                        type: 'bar',
                                                     },
-                                                    formatter: function (val, opt) {
-                                                        return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+                                                    colors: ['#FF0000', '#FFA500'], // ตัวอย่างสีของบาร์
+                                                    plotOptions: {
+                                                        bar: {
+                                                            columnWidth: '45%',
+                                                            distributed: true,
+                                                            borderRadius: 5
+                                                        }
                                                     },
-                                                    offsetX: 0,
-                                                    dropShadow: {
-                                                        enabled: true
-                                                    }
-                                                },
-                                                stroke: {
-                                                    width: 1,
-                                                    colors: ['#fff']
-                                                },
-                                                xaxis: {
-                                                    categories: ['Investors', 'Clients', 'Partners'],
-                                                },
-                                                yaxis: {
-                                                    labels: {
-                                                        show: false
-                                                    }
-                                                },
-                                                title: {
-                                                    text: 'Data by Category',
-                                                    align: 'center',
-                                                    floating: true
-                                                },
-                                                tooltip: {
-                                                    theme: 'dark',
-                                                    x: {
+                                                    dataLabels: {
+                                                        enabled: false
+                                                    },
+                                                    legend: {
                                                         show: false
                                                     },
-                                                    y: {
-                                                        title: {
-                                                            formatter: function () {
-                                                                return '';
+                                                    xaxis: {
+                                                        categories: ["Total People Count", "Total Senior People Count"],
+                                                        labels: {
+                                                            style: {
+                                                                colors: ['#FF0000', '#FFA500'],
+                                                                fontSize: '12px'
                                                             }
                                                         }
+                                                    },
+                                                    yaxis: {
+                                                        min: 0,
+                                                        max: totalPeopleCount + 20, // ปรับค่าสูงสุดตามข้อมูล
+                                                        title: {
+                                                            text: 'Number of Employees'
+                                                        }
+                                                    },
+                                                    title: {
+                                                        text: 'Total Company Employee',
+                                                        align: 'center'
                                                     }
-                                                }
-                                            };
-
-                                            var chart = new ApexCharts(document.querySelector("#chart"), options);
-                                            chart.render();
-
-                                        </script>
+                                                };
+    
+                                                var barChart1 = new ApexCharts(document.querySelector("#barChart1"), barOptions);
+                                                barChart1.render();
+                                                
+                                            </script>
+                                            <!-- Add your JavaScript for this chart -->
+                                        </div>
                                     </div>
-                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Total Contacts Chart</h4>
+                                            <div class="">
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total email : {{total_emails_count}}</p>
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total personal emails : {{total_personal_emails_count}}</p>
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total phone count : {{total_phones_count}}</p>
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total address count : {{total_addresses_count}}</p>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="radialBar1"></div>
+                                            <script>// ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
+                                                const totalEmailsCount = {{ total_emails_count }};
+                                                const totalPersonalEmailsCount = {{ total_personal_emails_count }};
+                                                const totalPhonesCount = {{ total_phones_count }};
+                                                const totalAddressesCount = {{ total_addresses_count }};
+    
+                                                var chartColors = {
+                                                    blue: '#6d6875',
+                                                    fuchsia: '#b5838d',
+                                                    green: '#e5989b',
+                                                    peacock: '#ffcdb2'
+                                                };
+    
+                                                // คำนวณเปอร์เซ็นต์สำหรับแต่ละประเภท
+                                                const totalt = totalEmailsCount + totalPersonalEmailsCount + totalPhonesCount + totalAddressesCount;
+    
+                                                const percentageEmails = (totalEmailsCount / totalt) * 100;
+                                                const percentagePersonalEmails = (totalPersonalEmailsCount / totalt) * 100;
+                                                const percentagePhones = (totalPhonesCount / totalt) * 100;
+                                                const percentageAddresses = (totalAddressesCount / totalt) * 100;
+    
+                                                var circleOptions = {
+                                                    series: [percentageEmails, percentagePersonalEmails, percentagePhones, percentageAddresses], // ใส่ค่าที่เป็นเปอร์เซ็นต์
+                                                    chart: {
+                                                        height: 390,
+                                                        type: 'radialBar'
+                                                    },
+                                                    plotOptions: {
+                                                        radialBar: {
+                                                            offsetY: 0,
+                                                            startAngle: 0,
+                                                            endAngle: 270,
+                                                            hollow: {
+                                                                margin: 5,
+                                                                size: '30%',
+                                                                background: 'transparent',
+                                                                image: undefined
+                                                            },
+                                                            dataLabels: {
+                                                                name: {
+                                                                    show: true,
+                                                                    fontSize: '16px', // ขนาดของชื่อ
+                                                                    color: '#39539e', // สีของชื่อ
+                                                                    offsetY: -10 // ระยะห่างจากกลางกราฟ
+                                                                },
+                                                                value: {
+                                                                    show: true,
+                                                                    formatter: function (val) {
+                                                                        // return val; 
+                                                                    }
+                                                                },
+                                                                barLabels: {
+                                                                    enabled: true,
+                                                                    useSeriesColors: true,
+                                                                    offsetX: -8,
+                                                                    fontSize: '16px',
+                                                                    formatter: function (seriesName, opts) {
+                                                                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+                                                                    },
+                                                                },
+                                                            }
+                                                        }
+                                                    },
+                                                    colors: [chartColors.blue, chartColors.fuchsia, chartColors.green, chartColors.peacock],
+                                                    labels: ['Emails', 'Personal Emails', 'Phones', 'Addresses'],
+                                                    responsive: [{
+                                                        breakpoint: 480,
+                                                        options: {
+                                                            legend: {
+                                                                show: false
+                                                            }
+                                                        }
+                                                    }]
+                                                };
+    
+                                                var radialBar1 = new ApexCharts(document.querySelector("#radialBar1"), circleOptions);
+                                                radialBar1.render();</script>
+
+                                            <!-- Add your JavaScript for this chart -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                
+                            <!-- Row 2 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Total Benefit Chart</h4>
+                                            <div class="">
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total investors : {{total_investors_count}}</p>
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total clients : {{total_clients_count}}</p>
+                                                <p style="font-size: 18px; line-height: 0.2; font-weight: bold;">total partners : {{total_partners_count}}</p>
+                                                
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="radialBar2"></div>
 
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Polar Area Chart</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="polarChart"></div>
-                                        <script type="text/javascript">
-                                            // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์จ้า
-                                            const totalChangesCount = {{ total_changes_count }};
-                                            const totalPeopleChangesCount = {{ total_people_changes_count }};
-                                            const totalContactChangesCount = {{ total_contact_changes_count }};
-
-                                            // คำนวณเปอร์เซ็นต์
-                                            const totaly = totalChangesCount + totalPeopleChangesCount + totalContactChangesCount;
-
-                                            const percentageChanges = (totalChangesCount / totaly) * 100;
-                                            const percentagePeopleChanges = (totalPeopleChangesCount / totaly) * 100;
-                                            const percentageContactChanges = (totalContactChangesCount / totaly) * 100;
-
-                                            var polarOptions = {
-                                                series: [percentageChanges, percentagePeopleChanges, percentageContactChanges],
-                                                chart: {
-                                                    type: 'polarArea',
-                                                    height: 350
-                                                },
-                                                stroke: {
-                                                    colors: ['#fff']
-                                                },
-                                                fill: {
-                                                    opacity: 0.8
-                                                },
-                                                labels: ['Total Changes', 'People Changes', 'Contact Changes'],
-                                                responsive: [{
-                                                    breakpoint: 480,
-                                                    options: {
-                                                        chart: {
-                                                            width: 200
-                                                        },
-                                                        legend: {
-                                                            position: 'bottom'
+                                            <!-- Add your JavaScript for this chart -->
+                                             <script> // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
+                                                const totalinvestorscount = {{ total_investors_count }};
+                                                const totalclientscount = {{ total_clients_count }};
+                                                const totalpartnerscount = {{ total_partners_count }};
+                                                
+    
+                                                var chartColors = {
+                                                    blue: '#96DED1',
+                                                    fuchsia: '#1434A4',
+                                                    green: '#0096FF',
+                                                    peacock: '#89CFF0'
+                                                };
+    
+                                                // คำนวณเปอร์เซ็นต์สำหรับแต่ละประเภท
+                                                const totalb = totalinvestorscount + totalclientscount + totalpartnerscount ;
+    
+                                                const percentageInvestors = (totalinvestorscount / totalb) * 100;
+                                                const percentageClient = (totalclientscount / totalb) * 100;
+                                                const percentagePartners = (totalpartnerscount / totalb) * 100;
+                                               
+    
+                                                var circleOptions = {
+                                                    series: [percentageInvestors, percentageClient, percentagePartners], // ใส่ค่าที่เป็นเปอร์เซ็นต์
+                                                    chart: {
+                                                        height: 390,
+                                                        type: 'radialBar'
+                                                    },
+                                                    plotOptions: {
+                                                        radialBar: {
+                                                            offsetY: 0,
+                                                            startAngle: 0,
+                                                            endAngle: 270,
+                                                            hollow: {
+                                                                margin: 5,
+                                                                size: '30%',
+                                                                background: 'transparent',
+                                                                image: undefined
+                                                            },
+                                                            dataLabels: {
+                                                                name: {
+                                                                    show: true,
+                                                                    fontSize: '16px', // ขนาดของชื่อ
+                                                                    color: '#39539e', // สีของชื่อ
+                                                                    offsetY: -10 // ระยะห่างจากกลางกราฟ
+                                                                },
+                                                                value: {
+                                                                    show: true,
+                                                                    formatter: function (val) {
+                                                                        // return val; 
+                                                                    }
+                                                                },
+                                                                barLabels: {
+                                                                    enabled: true,
+                                                                    useSeriesColors: true,
+                                                                    offsetX: -8,
+                                                                    fontSize: '16px',
+                                                                    formatter: function (seriesName, opts) {
+                                                                        return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+                                                                    },
+                                                                },
+                                                            }
                                                         }
+                                                    },
+                                                    colors: [chartColors.blue, chartColors.fuchsia, chartColors.green, chartColors.peacock],
+                                                    labels: ['Investors', 'Clients', 'Partners'],
+                                                    responsive: [{
+                                                        breakpoint: 480,
+                                                        options: {
+                                                            legend: {
+                                                                show: false
+                                                            }
+                                                        }
+                                                    }]
+                                                };
+    
+                                                var radialBar2 = new ApexCharts(document.querySelector("#radialBar2"), circleOptions);
+                                                radialBar2.render();</script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Total Change Chart</h4>
+                                            <div style="width: 200px; height: 87px; border: 0px transparent #ffffff; background-color: transparent;"></div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="barChart2"></div>
+                                            <!-- Add your JavaScript for this chart -->
+                                             <script>  // ข้อมูลพนักงานในบริษัท
+                                                const totalChangesCount = {{ total_changes_count }};
+                                                const totalPeopleChangesCount = {{ total_people_changes_count }};
+                                                const totalContactChangesCount = {{ total_contact_changes_count }};
+    
+                                                // คอนฟิก ApexChart
+                                                var barOptions = {
+                                                    series: [{
+                                                        name: 'Amount',
+                                                        data: [totalChangesCount, totalPeopleChangesCount,totalContactChangesCount]
+                                                    }],
+                                                    chart: {
+                                                        height: 350,
+                                                        type: 'bar',
+                                                    },
+                                                    colors: ['#AFE1AF', '#097969','#5F9EA0'], // ตัวอย่างสีของบาร์
+                                                    plotOptions: {
+                                                        bar: {
+                                                            columnWidth: '45%',
+                                                            distributed: true,
+                                                            borderRadius: 5
+                                                        }
+                                                    },
+                                                    dataLabels: {
+                                                        enabled: false
+                                                    },
+                                                    legend: {
+                                                        show: false
+                                                    },
+                                                    xaxis: {
+                                                        categories: ["totalChangesCount", "totalPeopleChangesCount","totalContactChangesCount"],
+                                                        labels: {
+                                                            style: {
+                                                                colors: ['#AFE1AF', '#097969','#5F9EA0'],
+                                                                fontSize: '12px'
+                                                            }
+                                                        }
+                                                    },
+                                                    yaxis: {
+                                                        min: 0,
+                                                        max: totalChangesCount + 20, // ปรับค่าสูงสุดตามข้อมูล
+                                                        title: {
+                                                            text: 'Number of Changes'
+                                                        }
+                                                    },
+                                                    title: {
+                                                        text: 'Total Company changes',
+                                                        align: 'center'
                                                     }
-                                                }]
-                                            };
-
-                                            var polarChart = new ApexCharts(document.querySelector("#polarChart"), polarOptions);
-                                            polarChart.render();
-                                        </script>
+                                                };
+    
+                                                var barChart2 = new ApexCharts(document.querySelector("#barChart2"), barOptions);
+                                                barChart2.render();</script>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
                 </body>
+                
+
+                
+
+
+
 
                 </html>
 
