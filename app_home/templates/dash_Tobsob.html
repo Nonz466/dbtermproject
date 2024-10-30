@@ -51,11 +51,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total chart all company</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Athiti:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -79,8 +74,9 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            
-                            <a href="/DashTotalComTest" class="card-title">UK company data</a>
+                            <a href="index.html"><img
+                                    src="https://themewagon.github.io/mazer/dist/assets/images/logo/logo.png" alt="Logo"
+                                    srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -95,9 +91,9 @@
                                 <span>Dashboard</span>
                             </a>
                             <ul class="submenu ">
-                                <!-- <li class="submenu-item ">
+                                <li class="submenu-item ">
                                     <a href="/Dashboradtest/{company_id}">Specific company</a>
-                                </li> -->
+                                </li>
                                 <li class="submenu-item ">
                                     <a href="/DashTotalComTest">Total chart all company</a>
                                 </li>
@@ -267,7 +263,7 @@
                         </li>
 
 
-                        <!-- <li class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-egg-fill"></i>
                                 <span>Icons</span>
@@ -283,7 +279,7 @@
                                     <a href="ui-icons-dripicons.html">Dripicons</a>
                                 </li>
                             </ul>
-                        </li> -->
+                        </li>
 
 
 
@@ -616,14 +612,8 @@
                                         <h4 class="card-title">Custom Angle Circle Chart</h4>
                                     </div>
                                     <div class="card-body">
-                                        <div id="radialBar"></div>
-                                        <text x="187" y="98.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Emails: {{ total_emails_count }} |</text>
-                                        <text x="187" y="90.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Personal Emails: {{ total_personal_emails_count }} |</text>
-                                        <text x="187" y="80.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Phones: {{ total_phones_count }} |</text>
-                                        <text x="187" y="70.53560975609756" text-anchor= "end" dominant-baseline="middle" font-size="10px" font-family="Athiti, sans-serif" font-weight= "300" fill="#39539e" class="apexcharts-text apexchart s-radialbar-label apexcharts-no-click" rel="3" style="fo nt-family: Helvetica, Arial, sans-serif;">Addresses: {{ total_addresses_count }} |</text>
-                                        
+                                        <div id="circleChart"></div>
                                         <script type="text/javascript">
-                                            
                                             // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
                                             const totalEmailsCount = {{ total_emails_count }};
                                             const totalPersonalEmailsCount = {{ total_personal_emails_count }};
@@ -666,13 +656,13 @@
                                                             name: {
                                                                 show: true,
                                                                 fontSize: '16px', // ขนาดของชื่อ
-                                                                color: '#39539e', // สีของชื่อ
+                                                                color: undefined, // สีของชื่อ
                                                                 offsetY: -10 // ระยะห่างจากกลางกราฟ
                                                             },
                                                             value: {
                                                                 show: true,
                                                                 formatter: function (val) {
-                                                                    // return val; 
+                                                                    return val.toFixed(2) + "%"; // แสดงเปอร์เซ็นต์ให้มีทศนิยม 2 ตำแหน่ง
                                                                 }
                                                             },
                                                             barLabels: {
@@ -699,7 +689,7 @@
                                                 }]
                                             };
 
-                                            var circleChart = new ApexCharts(document.querySelector("#radialBar"), circleOptions);
+                                            var circleChart = new ApexCharts(document.querySelector("#circleChart"), circleOptions);
                                             circleChart.render();
                                         </script>
                                     </div>
@@ -711,88 +701,68 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">Horizontal bar Chart</h4>
+                                        <h4 class="card-title">Radar Chart</h4>
                                     </div>
                                     <div class="card-body">
-                                        <div id="chart"></div>
-                                        <script>
+                                        <div id="radarChart"></div>
+                                        <script type="text/javascript">
                                             // ดึงข้อมูลจากตัวแปรที่มาจากฝั่งเซิร์ฟเวอร์
                                             const totalInvestorsCount = {{ total_investors_count }};
                                             const totalClientsCount = {{ total_clients_count }};
                                             const totalPartnersCount = {{ total_partners_count }};
 
-                                            // ตั้งค่ากราฟแท่งโดยใช้ค่าจำนวนเต็ม
-                                            var options = {
+                                            // คำนวณเปอร์เซ็นต์
+                                            const total = totalInvestorsCount + totalClientsCount + totalPartnersCount;
+
+                                            const percentageInvestors = (totalInvestorsCount / total) * 100;
+                                            const percentageClients = (totalClientsCount / total) * 100;
+                                            const percentagePartners = (totalPartnersCount / total) * 100;
+
+                                            var radarOptions = {
                                                 series: [{
-                                                    data: [totalInvestorsCount, totalClientsCount, totalPartnersCount]
+                                                    name: 'Investors',
+                                                    data: [percentageInvestors],
+                                                }, {
+                                                    name: 'Clients',
+                                                    data: [percentageClients],
+                                                }, {
+                                                    name: 'Partners',
+                                                    data: [percentagePartners],
                                                 }],
                                                 chart: {
-                                                    type: 'bar',
-                                                    height: 380
-                                                },
-                                                plotOptions: {
-                                                    bar: {
-                                                        barHeight: '100%',
-                                                        distributed: true,
-                                                        horizontal: true,
-                                                        dataLabels: {
-                                                            position: 'bottom'
-                                                        },
-                                                    }
-                                                },
-                                                colors: ['#33b2df', '#546E7A', '#d4526e'],
-                                                dataLabels: {
-                                                    enabled: true,
-                                                    textAnchor: 'start',
-                                                    style: {
-                                                        colors: ['#fff']
-                                                    },
-                                                    formatter: function (val, opt) {
-                                                        return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
-                                                    },
-                                                    offsetX: 0,
+                                                    height: 350,
+                                                    type: 'radar',
                                                     dropShadow: {
-                                                        enabled: true
-                                                    }
-                                                },
-                                                stroke: {
-                                                    width: 1,
-                                                    colors: ['#fff']
-                                                },
-                                                xaxis: {
-                                                    categories: ['Investors', 'Clients', 'Partners'],
-                                                },
-                                                yaxis: {
-                                                    labels: {
-                                                        show: false
+                                                        enabled: true,
+                                                        blur: 1,
+                                                        left: 1,
+                                                        top: 1
                                                     }
                                                 },
                                                 title: {
-                                                    text: 'Data by Category',
-                                                    align: 'center',
-                                                    floating: true
+                                                    text: 'Radar Chart - Multi Series'
                                                 },
-                                                tooltip: {
-                                                    theme: 'dark',
-                                                    x: {
-                                                        show: false
-                                                    },
-                                                    y: {
-                                                        title: {
-                                                            formatter: function () {
-                                                                return '';
-                                                            }
-                                                        }
-                                                    }
+                                                stroke: {
+                                                    width: 2
+                                                },
+                                                fill: {
+                                                    opacity: 0.1
+                                                },
+                                                markers: {
+                                                    size: 0
+                                                },
+                                                yaxis: {
+                                                    stepSize: 20
+                                                },
+                                                xaxis: {
+                                                    categories: ['Investors', 'Clients', 'Partners']
                                                 }
                                             };
 
-                                            var chart = new ApexCharts(document.querySelector("#chart"), options);
-                                            chart.render();
-
+                                            var radarChart = new ApexCharts(document.querySelector("#radarChart"), radarOptions);
+                                            radarChart.render();
                                         </script>
                                     </div>
-                                    
                                 </div>
                             </div>
 
@@ -810,11 +780,11 @@
                                             const totalContactChangesCount = {{ total_contact_changes_count }};
 
                                             // คำนวณเปอร์เซ็นต์
-                                            const totaly = totalChangesCount + totalPeopleChangesCount + totalContactChangesCount;
+                                            const total = totalChangesCount + totalPeopleChangesCount + totalContactChangesCount;
 
-                                            const percentageChanges = (totalChangesCount / totaly) * 100;
-                                            const percentagePeopleChanges = (totalPeopleChangesCount / totaly) * 100;
-                                            const percentageContactChanges = (totalContactChangesCount / totaly) * 100;
+                                            const percentageChanges = (totalChangesCount / total) * 100;
+                                            const percentagePeopleChanges = (totalPeopleChangesCount / total) * 100;
+                                            const percentageContactChanges = (totalContactChangesCount / total) * 100;
 
                                             var polarOptions = {
                                                 series: [percentageChanges, percentagePeopleChanges, percentageContactChanges],
